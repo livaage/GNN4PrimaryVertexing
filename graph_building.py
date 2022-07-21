@@ -3,14 +3,19 @@ import numpy as np
 import time 
 import multiprocessing as mp 
 from functools import partial
-
+import os 
 
 #mc = pd.read_pickle('mc_25k.pkl')
-trk = pd.read_csv('trk_processed_25k.csv')
+trk = pd.read_csv('untracked/trk_processed_25k.csv')
 
 
 
 n_events = trk['entry'].nunique() 
+
+outdir = 'built_graphs/rebalanced/'
+
+if not os.path.exists(outdir): 
+    os.makedirs(outdir) 
 
 
 def build_graph(event_number): 
@@ -38,7 +43,7 @@ def build_graph(event_number):
     X = balanced_df[['trk_pt', 'trk_eta', 'trk_phi', 'trk_z0']].values
     
 
-    np.savez("built_graphs/standard/graph_"+str(event_number), ** dict(x=X, edge_index=connections, y=balanced_df['is_pv'].values)) 
+    np.savez(outdir+"graph_"+str(event_number), ** dict(x=X, edge_index=connections, y=balanced_df['is_pv'].values)) 
 
     return 
 

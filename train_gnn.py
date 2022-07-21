@@ -13,6 +13,20 @@ from torch.optim.lr_scheduler import StepLR
 from models.gcn import GCN 
 from models.interaction_network import InteractionNetwork
 from models.dataset import GraphDataset
+import os 
+
+trained_output_dir = 'train_output/' 
+trained_models_dir = 'trained_models/'
+
+if not os.path.exists(trained_output_dir): 
+    os.makedirs(trained_output_dir) 
+
+if not os.path.exists(trained_models_dir): 
+    os.makedirs(trained_models_dir) 
+
+
+
+
 
 def train(args, model, device, train_loader, optimizer, epoch):
     model.train()
@@ -150,7 +164,7 @@ def main():
         
     home_dir = "../"
     #indir = "{}/hitgraphs_{}/{}_{}/".format(home_dir, args.sample, args.construction, args.pt)
-    indir = 'built_graphs/standard/' 
+    indir = 'built_graphs/rebalanced/' 
 
     graph_files = np.array(os.listdir(indir))
     graph_files = np.array([os.path.join(indir, graph_file)
@@ -166,7 +180,6 @@ def main():
     
     params = {'batch_size': 1, 'shuffle': True, 'num_workers': 1}
    
-    print("partition ", partition)
     train_set = GraphDataset(graph_files=partition['train'])
     train_loader = DataLoader(train_set, **params)
     test_set = GraphDataset(graph_files=partition['test'])
